@@ -1,4 +1,5 @@
 require "rack/swagger/version"
+require "rack/swagger/sinatra_helpers"
 require "rack/static"
 
 module Rack
@@ -21,5 +22,6 @@ module Rack
         run lambda { [404, "Not found", {}] }
       end
     end
+
   end
 end

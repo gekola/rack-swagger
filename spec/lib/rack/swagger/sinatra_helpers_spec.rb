@@ -78,11 +78,7 @@ describe Rack::Swagger::SinatraHelpers do
                                 "/listings/{id}/recommendations", "/protobuf_test", "/rent/listings",
                                 "/reviews/{id}", "/reviews/partial/{id}"],
 
-                       "POST"=>["/reviews/flag/{id}/{type}/{review_id}"],
-
-                       "PUT"=>[],
-
-                       "DELETE"=>[]}
+                       "POST"=>["/reviews/flag/{id}/{type}/{review_id}"]}
 
     expect(Rack::Swagger::SinatraHelpers.get_all_routes(@app1, @app2)).to eq(expected_result)
   end

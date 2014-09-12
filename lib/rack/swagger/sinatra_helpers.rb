@@ -2,27 +2,31 @@ module Rack
   module Swagger
     module SinatraHelpers
       def self.get_all_routes(*apps)
-        routes = {"GET" => [],
-                  "HEAD" => [],
-                  "POST" => [],
-                  "PUT" => [],
-                  "DELETE" => []
-        }
-
+        routes = {}
         apps.each do |app|
-          get, head, post, put, delete = *get_routes(app)
+          routes_by_verb = get_routes app
 
-          routes["GET"] += get
-          routes["HEAD"] += head
-          routes["POST"] += post
-          routes["PUT"] += put
-          routes["DELETE"] += delete
+          HTTP_VERBS.each do |verb|
+            unless routes_by_verb[ verb ].nil?
+              routes[ verb ] ||= []
+              routes[ verb ] += routes_by_verb[ verb ]
+            end
+          end
         end
-
         routes
       end
 
       private
+
+      HTTP_VERBS = %w(  GET
+                        HEAD
+                        POST
+                        PUT
+                        DELETE
+                        TRACE
+                        OPTIONS
+                        CONNECT
+                        PATCH )
 
       def self.expand_routes(routes)
         all_routes = routes.map do |r|
@@ -62,9 +66,12 @@ module Rack
       end
 
       def self.get_routes(app)
-        ["GET", "HEAD", "POST", "PUT", "DELETE"].map do |verb|
-          expand_routes(app.routes[verb] || [])
+        routes_by_verb = {}
+        HTTP_VERBS.each do |verb|
+          routes = app.routes[verb]
+          routes_by_verb[ verb ] = routes.nil? ? nil : expand_routes( routes )
         end
+        routes_by_verb
       end
     end
   end

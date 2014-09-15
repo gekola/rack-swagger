@@ -45,11 +45,16 @@ task :update_swagger_ui do
     res = client.get('https://api.github.com/repos/wordnik/swagger-ui/tarball/' + yml[:versions][:theirs], follow_redirect: true)
     raise "Github API returned #{res.inspect}" if res.status != 200
 
+    # pull down swagger-ui mainline
     cd "swagger-ui"
     tar = res.content
     File.open("swagger-ui-#{yml[:versions][:theirs]}.tar", "w+") { |f| f << tar }
     sh("tar xvf swagger-ui-#{yml[:versions][:theirs]}.tar --include '*swagger-ui*/dist*' --strip-components 1")
     cd ".."
+
+    # apply branding
+    puts `cat lib/rack/swagger/rentpath/rentpath.diff | patch -p1`
+    cp "lib/rack/swagger/rentpath/logo_small.png", "swagger-ui/dist/images/logo_small.png"
 
     yml[:versions][:ours] = yml[:versions][:theirs]
     save_swagger_ui_version_yml(yml)

@@ -23,8 +23,13 @@ module Rack
         end
 
         map "/docs" do
-          use Rack::Static, :urls => ["/"], :root => docs_dir
-          run lambda { [404, "Not found", {}] }
+          run Rack::File.new(docs_dir + "/swagger.json")
+        end
+
+        Dir.glob(docs_dir + "/*.json").each do |file|
+          map "/docs/" + ::File.basename(file, ".json") do
+            run Rack::File.new(file)
+          end
         end
       end
     end

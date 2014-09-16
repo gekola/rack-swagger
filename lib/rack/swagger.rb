@@ -15,13 +15,18 @@ module Rack
     #   map '/docs' do
     #     run Rack::Swagger.app
     #   end
-    def self.app
+    def self.app(docs_dir)
       Rack::Builder.app do
-        puts ::File.expand_path("../../../swagger-ui/dist", __FILE__)
-        use Rack::Static, :urls => ["/"], :root => ::File.expand_path("../../../swagger-ui/dist", __FILE__)
-        run lambda { [404, "Not found", {}] }
+        map "/docs/ui" do
+          use Rack::Static, :urls => ["/"], :root => ::File.expand_path("../../../swagger-ui/dist", __FILE__)
+          run lambda { [404, "Not found", {}] }
+        end
+
+        map "/docs" do
+          use Rack::Static, :urls => ["/"], :root => docs_dir
+          run lambda { [404, "Not found", {}] }
+        end
       end
     end
-
   end
 end

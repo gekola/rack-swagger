@@ -4,6 +4,8 @@ require "rack/static"
 
 module Rack
   module Swagger
+    RESOURCE_DOC_JSON_MATCHER = /^\/docs\/api-docs\/(.+)\/?/
+    ROOT_DOC_JSON_MATCHER     = /^\/docs\/api-docs\/?/
     # Rack app for serving the swagger-ui front-end.
     #
     # Usage: in your config.ru, add:
@@ -20,17 +22,18 @@ module Rack
 
       Rack::Cascade.new([
         lambda { |env|
-          if env['PATH_INFO'] =~ /^\/docs\/api-docs\/(.+)\/?/
-            resource_doc = /^\/docs\/api-docs\/(.+)/.match(env['PATH_INFO'])[1]
+          case
+          when env['PATH_INFO'] =~ RESOURCE_DOC_JSON_MATCHER
+            resource_doc = RESOURCE_DOC_JSON_MATCHER.match(env['PATH_INFO'])[1]
             display_file_or_404(:json, "#{docs_dir}/#{resource_doc}.json")
 
-          elsif env['PATH_INFO'] =~ /^\/docs\/api-docs\/?/
+          when env['PATH_INFO'] =~ ROOT_DOC_JSON_MATCHER
             display_file_or_404(:json, "#{docs_dir}/swagger.json")
 
-          elsif env['PATH_INFO'] == "/docs/"
+          when env['PATH_INFO'] == "/docs/"
             display_file_or_404(:html, ::File.join(swagger_dist_path, "index.html"))
 
-          elsif env['PATH_INFO'] == "/docs"
+          when env['PATH_INFO'] == "/docs"
             res = Rack::Response.new
             res.redirect("/docs/")
             res.finish
@@ -48,14 +51,14 @@ module Rack
     end
 
     def self.display_file_or_404(type, file)
-      if ::File.exists?(path)
+      if ::File.exists?(file)
         [
           200,
           {
             'Content-Type'  => type == :json ? 'application/json' : 'text/html',
             'Cache-Control' => 'public, max-age=86400'
           },
-          ::File.open(path, ::File::RDONLY)
+          ::File.open(file, ::File::RDONLY)
         ]
       else
         [404, {}, ["Not found"]]

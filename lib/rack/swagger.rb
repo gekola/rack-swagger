@@ -8,12 +8,12 @@ module Rack
     #
     # Usage: in your config.ru, add:
     #
-    #   run Rack::Swagger.app
+    #   run Rack::Swagger.app(File.expand_path("../docs/", __FILE__))
     #
     # ...or to map to a route:
     #
     #   map '/docs' do
-    #     run Rack::Swagger.app
+    #     run Rack::Swagger.app(File.expand_path("../docs/", __FILE__))
     #   end
     def self.app(docs_dir)
       swagger_dist_path = ::File.expand_path("../../../swagger-ui/dist", __FILE__)
@@ -35,11 +35,11 @@ module Rack
 
       Rack::Cascade.new([
         lambda { |env|
-          if env['PATH_INFO'] =~ /^\/docs\/(.+)/
-            resource_doc = /^\/docs\/(.+)/.match(env['PATH_INFO'])[1]
+          if env['PATH_INFO'] =~ /^\/docs\/api-docs\/(.+)\/?/
+            resource_doc = /^\/docs\/api-docs\/(.+)/.match(env['PATH_INFO'])[1]
             display_file[:json, "#{docs_dir}/#{resource_doc}.json"]
 
-          elsif env['PATH_INFO'] == "/docs" && env['HTTP_ACCEPT'] == "application/json"
+          elsif env['PATH_INFO'] =~ /^\/docs\/api-docs\/?/
             display_file[:json, "#{docs_dir}/swagger.json"]
 
           elsif env['PATH_INFO'] == "/docs/"
@@ -49,6 +49,9 @@ module Rack
             res = Rack::Response.new
             res.redirect("/docs/")
             res.finish
+
+          else
+            [404, {}, ["Not found"]]
           end
         },
         Rack::Builder.new do

@@ -11,12 +11,12 @@ module Rack
       end
 
       def call(env)
-        case
-        when env['PATH_INFO'] =~ RESOURCE_DOC_JSON_MATCHER
+        case env['PATH_INFO']
+        when RESOURCE_DOC_JSON_MATCHER
           resource_doc = RESOURCE_DOC_JSON_MATCHER.match(env['PATH_INFO'])[1]
           display_file_or_404(:json, "#{@docs_dir}/#{resource_doc}.json")
 
-        when env['PATH_INFO'] =~ ROOT_DOC_JSON_MATCHER
+        when ROOT_DOC_JSON_MATCHER
           display_file_or_404(:json, "#{@docs_dir}/swagger.json")
 
         else

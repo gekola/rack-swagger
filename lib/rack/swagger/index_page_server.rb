@@ -4,11 +4,11 @@ module Rack
       include ServerHelpers
 
       def call(env)
-        case
-        when env['PATH_INFO'] == "/docs/"
-          display_file_or_404(:html, ServerHelpers.swagger_index_html_path)
+        case env['PATH_INFO']
+        when "/docs/"
+          display_file_or_404(:html, swagger_index_html_path)
 
-        when env['PATH_INFO'] == "/docs"
+        when "/docs"
           res = Rack::Response.new
           res.redirect("/docs/")
           res.finish

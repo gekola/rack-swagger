@@ -1,11 +1,11 @@
 module Rack
   module Swagger
     module ServerHelpers
-      def self.swagger_dist_path
+      def swagger_dist_path
         ::File.expand_path("../../../../swagger-ui/dist", __FILE__)
       end
 
-      def self.swagger_index_html_path
+      def swagger_index_html_path
         ::File.join(swagger_dist_path, "index.html")
       end
 

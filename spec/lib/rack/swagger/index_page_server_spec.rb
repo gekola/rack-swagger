@@ -2,6 +2,7 @@ require "spec_helper"
 
 describe Rack::Swagger::IndexPageServer do
   include Rack::Test::Methods
+  include Rack::Swagger::ServerHelpers
 
   def app
     Rack::Swagger::IndexPageServer.new
@@ -9,7 +10,7 @@ describe Rack::Swagger::IndexPageServer do
 
   it "serves index.html at /docs/" do
     get "/docs/"
-    expect(last_response.body).to eq(File.read(Rack::Swagger::ServerHelpers.swagger_dist_path + "/index.html"))
+    expect(last_response.body).to eq(File.read(swagger_dist_path + "/index.html"))
   end
 
   it "redirects /docs => /docs/" do

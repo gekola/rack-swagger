@@ -4,6 +4,7 @@ lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 require "rack/swagger"
+require "rack/test"
 require "rspec"
 require 'rspec/autorun'
 

@@ -13,7 +13,7 @@ module Rack
       def call(env)
         case env['PATH_INFO']
         when RESOURCE_DOC_JSON_MATCHER
-          resource_doc = RESOURCE_DOC_JSON_MATCHER.match(env['PATH_INFO'])[1]
+          resource_doc = $1
           display_file_or_404(:json, "#{@docs_dir}/#{resource_doc}.json")
 
         when ROOT_DOC_JSON_MATCHER

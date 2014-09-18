@@ -20,7 +20,38 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Set up a docs folder in your project. Place the root API doc there and call it
+"swagger.json". Place your resource API docs there as well. For example, if you
+have one resource called "pet", your docs folder will have two files:
+
+* swagger.json (the root API doc)
+* pet.json (the pet resource)
+
+In your config.ru, run Rack::Swagger.app(), passing in the path to your docs
+folder.
+
+```ruby
+run Rack::Swagger.app(File.expand_path("../docs/", __FILE__))
+```
+
+This will serve the swagger-ui front-end at **/docs/**, and your
+doc files at **/docs/api-docs/**. 
+
+Note that you will have to prefix the path
+value with "/api-docs" in your root API doc for each resource. Like this:
+
+```json
+  {
+    "path": "/api-docs/pet",
+    "description": "Operations about pets"
+  },
+```
+
+## Notes
+
+For an example of properly formatted Swagger 1.2 JSON files working together
+with [swagger-ui](https://github.com/wordnik/swagger-ui), see:
+[http://petstore.swagger.wordnik.com/](Pet Store Demo).
 
 ## Contributing
 
@@ -29,3 +60,4 @@ TODO: Write usage instructions here
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
+

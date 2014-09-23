@@ -12,6 +12,3 @@
 *.o
 *.a
 mkmf.log
-
-swagger-ui/
-swagger_ui_version.yml

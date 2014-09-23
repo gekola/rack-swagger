@@ -25,4 +25,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "rake", "~> 10.0"
   spec.add_dependency "rack", "~> 1.4"
   spec.add_dependency "httpclient", "~> 2"
+  spec.add_dependency "activesupport"
 end

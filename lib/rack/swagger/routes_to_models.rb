@@ -58,7 +58,7 @@ module Rack
         end
       end
 
-      def generate_models(json, root_name)
+      def generate_models(json, root_name, debug=false)
         models = {}
 
         traverse('root', json) do |parent, obj_name, obj_type|
@@ -66,7 +66,9 @@ module Rack
             obj_type = "Boolean"
           end
 
-          puts sprintf("parent: %30s obj_name: %20s obj_type: %20s", parent, obj_name, obj_type.to_s[0...20])
+          if debug
+            puts sprintf("parent: %30s obj_name: %20s obj_type: %20s", parent, obj_name, obj_type.to_s[0...20])
+          end
 
           if obj_type == "NilClass"
             # skip

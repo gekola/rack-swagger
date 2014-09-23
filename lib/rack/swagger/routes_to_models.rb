@@ -17,23 +17,29 @@ module Rack
         raw  = `curl "#{url}"`
         json = JSON.parse raw
       rescue
-        puts "#{__FILE__}:#{__LINE__}: URL not parseable."
+        puts "#{__FILE__}:#{__LINE__}: URL not parsable."
         {}
       end
 
       def traverse(gp='root', parent='root', obj, &blk)
         case obj
         when Hash
-          type = ActiveSupport::Inflector.camelize(parent)
+          type = to_model_name(parent)
           blk.call(gp, parent, type)
           obj.each {|k,v| traverse(parent, k, v, &blk) }
         when Array
-          type = ActiveSupport::Inflector.singularize(ActiveSupport::Inflector.camelize(parent))
+          type = to_model_name(parent, singularize: true)
           blk.call(gp, parent, "[#{type}]")
           obj.each {|v| traverse(parent, "#{type}", v, &blk) }
         else
           blk.call(gp, parent, "#{obj.class}")
         end
+      end
+
+      def to_model_name(str, singularize: false)
+        str2 = ActiveSupport::Inflector.camelize(str)
+        str2 = ActiveSupport::Inflector.singularize(str2) if singularize
+        "Model_#{str2}"
       end
 
 
@@ -54,7 +60,7 @@ module Rack
         when /\[(.+)\]/
           {type: "array", items: new_property($1) }
         else
-          { "$ref" => ruby_type }
+          { "$ref" => ruby_type.gsub(/^Model_/, "") }
         end
       end
 
@@ -73,14 +79,16 @@ module Rack
           if obj_type == "NilClass"
             # skip
 
-          elsif parent[0].match /[A-Z]/
-            unless models[parent]
-              models[parent] = new_model(parent)
+          elsif parent.match(/^Model_/)
+            parent_wo_model = parent.gsub(/^Model_/, "")
+
+            unless models[parent_wo_model]
+              models[parent_wo_model] = new_model(parent_wo_model)
             end
 
-            models[parent][:properties][obj_name] = new_property(obj_type)
-          elsif parent[0].match(/[a-z]/) && obj_name[0].match(/[a-z]/)
-            c_parent = ActiveSupport::Inflector.camelize(parent)
+            models[parent_wo_model][:properties][obj_name] = new_property(obj_type)
+          elsif !parent.match(/^Model_/) && !obj_name.match(/^Model_/)
+            c_parent = to_model_name(parent).gsub(/^Model_/, "")
 
             unless models[c_parent]
               models[c_parent] = new_model(c_parent)

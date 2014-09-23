@@ -32,7 +32,50 @@ describe Rack::Swagger::RoutesToModels do
     ]
   }}
 
+  let(:expected_result_2) {{
+    "AdMobBannerIds"=>
+      {:id=>"AdMobBannerIds",
+       :properties=>
+        {"AGBannerResultsListTelCoAdUnitId"=>{:type=>"string"},
+         "AGBannerResultsListAdUnitId"=>{:type=>"string"},
+         "AGBannerDetailsAdUnitId"=>{:type=>"string"},
+         "AGBannerDetailsTelCoAdUnitId_1"=>{:type=>"string"},
+         "AGBannerDetailsTelCoAdUnitId_2"=>{:type=>"string"},
+         "AGBannerThankYouAdUnitId"=>{:type=>"string"},
+         "AGBannerThankYouTelCoAdUnitId"=>{:type=>"string"}}},
+    "Config"=>
+      {:id=>"Config",
+       :properties=>
+        {"copyright"=>{:type=>"string"},
+         "offsiteAnalyticsFlag"=>{:type=>"string"},
+         "offsiteAnalyticsQueueLimit"=>{:type=>"string"},
+         "adMobBannerIds"=>{"$ref"=>"AdMobBannerIds"}
+        }
+      }
+  }}
+
+  let(:sample_response_2) {{
+    "copyright"=>
+      "Copyright 2014 RentPath, Inc.  All rights reserved.  All photos, videos, text and other content are the property of RentPath, Inc.  APARTMENT GUIDE and the APARTMENT GUIDE Trade Dress are registered trademarks of RentPath, Inc. or its affiliates.",
+      "offsiteAnalyticsFlag"=>"true",
+      "offsiteAnalyticsQueueLimit"=>"50",
+      "adMobBannerIds"=>
+        {"AGBannerResultsListTelCoAdUnitId"=>
+         "/7449/mob.aptguide.com.%@/Search/tlp_p",
+         "AGBannerResultsListAdUnitId"=>"/7449/mob.aptguide.com.%@/Search/b_lb_p1",
+         "AGBannerDetailsAdUnitId"=>"/7449/mob.aptguide.com.%@/Detail/b_lb_p1",
+         "AGBannerDetailsTelCoAdUnitId_1"=>"/7449/mob.aptguide.com.%@/Detail/tdp_p1",
+         "AGBannerDetailsTelCoAdUnitId_2"=>"/7449/mob.aptguide.com.%@/Detail/tdp_p2",
+         "AGBannerThankYouAdUnitId"=>"/7449/mob.aptguide.com.%@/ThankYou/b_lb_p1",
+         "AGBannerThankYouTelCoAdUnitId"=>"/7449/mob.aptguide.com.%@/ThankYou/tdp_p1"
+        }
+  }}
+
   it "turns a response into a model declaration" do
     expect(generate_models(sample_response, "Pins")).to eq expected_result
+  end
+
+  it "turns another response into a model declaration" do
+    expect(generate_models(sample_response_2, "Config")).to eq expected_result_2
   end
 end

@@ -1,5 +1,6 @@
 require 'active_support/inflector/inflections'
 require 'active_support/inflections'
+require 'active_support/inflector/methods'
 require 'json'
 require 'pp'
 
@@ -15,6 +16,9 @@ module Rack
       def get_json(url)
         raw  = `curl "#{url}"`
         json = JSON.parse raw
+      rescue
+        puts "#{__FILE__}:#{__LINE__}: URL not parseable."
+        {}
       end
 
       def traverse(gp='root', parent='root', obj, &blk)
@@ -54,7 +58,7 @@ module Rack
         end
       end
 
-      def generate_models(json)
+      def generate_models(json, root_name)
         models = {}
 
         traverse('root', json) do |parent, obj_name, obj_type|
@@ -84,7 +88,12 @@ module Rack
           end
         end
 
+        root = models["Root"]
         models.delete("Root")
+        root[:properties].delete("root")
+        root[:id] = root_name
+
+        models[root_name] = root
         models
       end
     end

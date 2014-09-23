@@ -26,10 +26,4 @@ Gem::Specification.new do |spec|
   spec.add_dependency "rack", "~> 1.4"
   spec.add_dependency "httpclient", "~> 2"
   spec.add_dependency "activesupport"
-
-  Gem.post_install do
-    Dir.chdir `bundle show rack-swagger`.chomp do
-      `rake`
-    end
-  end
 end

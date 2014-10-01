@@ -17,11 +17,20 @@ module Rack
               'Content-Type'  => type == :json ? 'application/json' : 'text/html',
               'Cache-Control' => 'public, max-age=86400'
             },
-            ::File.open(file, ::File::RDONLY)
+            ::StringIO.new(display_file(type, file))
           ]
         else
           [404, {}, ["Not found"]]
         end
+      end
+
+      def display_file(type, file)
+        @files ||= {}
+        @files[file] ||= begin
+                           contents = ::File.read(file)
+                           contents.gsub!(/ENV\[SWAGGER_([A-Z0-9_]+)\]/) { |match| ENV["SWAGGER_#{$1}"] } if type == :json
+                           contents
+                         end
       end
     end
   end

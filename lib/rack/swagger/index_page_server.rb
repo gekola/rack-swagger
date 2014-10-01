@@ -10,7 +10,7 @@ module Rack
 
         when "/docs"
           res = Rack::Response.new
-          res.redirect("/docs/")
+          res.redirect("docs/")
           res.finish
 
         else

@@ -47,6 +47,19 @@ value with "/api-docs" in your root API doc for each resource. Like this:
   },
 ```
 
+## Upgrading swagger-ui
+
+A distribution of swagger-ui is included with rack-swagger. For developers who
+want to upgrade this distribution, there is a Rake task which pulls down the
+latest version and applies some changes to it. To use, run:
+
+```
+rm -rf swagger-ui/
+rake swagger_ui
+```
+
+Then check in the updated code.
+
 ## Notes
 
 For an example of properly formatted Swagger 1.2 JSON files working together

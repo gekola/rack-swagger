@@ -28,7 +28,7 @@ module Rack
         @files ||= {}
         @files[file] ||= begin
                            contents = ::File.read(file)
-                           contents.gsub!(/ENV\[SWAGGER_([A-Z0-9_]+)\]/) { |match| ENV["SWAGGER_#{$1}"] } if type == :json
+                           contents.gsub!(/ENV\[([A-Z0-9_]+)\]/) { |match| ENV["#{$1}"] } if type == :json
                            contents
                          end
       end

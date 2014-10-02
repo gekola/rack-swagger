@@ -54,7 +54,16 @@ want to upgrade this distribution, there is a Rake task which pulls down the
 latest version and applies some changes to it. To use, run:
 
 ```
+rake swagger_ui
+```
+
+If someone downloads the distribution without using the Rake task and you're
+trying to restore back to the original, remove the directory and version
+file before running the rake task:
+
+```
 rm -rf swagger-ui/
+rm swagger_ui_version.yml
 rake swagger_ui
 ```
 

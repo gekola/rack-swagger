@@ -28,9 +28,14 @@ module Rack
         @files ||= {}
         @files[file] ||= begin
                            contents = ::File.read(file)
-                           contents.gsub!(/ENV\[([A-Z0-9_]+)\]/) { |match| ENV["#{$1}"] } if type == :json
+                           contents = interpolate_env_vars(contents) if type == :json
                            contents
                          end
+      end
+
+      def interpolate_env_vars(str)
+        str.gsub!(/ENV\[([A-Z0-9_]+)\]/) { |match| ENV["#{$1}"] }
+
       end
     end
   end

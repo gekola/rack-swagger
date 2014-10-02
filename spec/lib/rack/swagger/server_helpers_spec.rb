@@ -24,15 +24,13 @@ describe Rack::Swagger::ServerHelpers do
       result = display_file_or_404(:json, __FILE__)
       expect(result[1]["Content-Type"]).to eq("application/json")
     end
+  end
 
+  describe "interpolate_env_vars" do
     it "escapes relevant ENV vars" do
-      ENV["SWAGGER_TEST"] = "foo"
-      myvar = "ENV[SWAGGER_TEST]"
-
-      result = display_file_or_404(:json, __FILE__)
-      str = result[2].read
-      expect(str).not_to include('myvar = "ENV[SWAGGER_TEST]"')
-      expect(str).to include('myvar = "foo"')
+      ENV["SWAGGER_TEST"] = "bar"
+      result = interpolate_env_vars("{\"foo\":\"ENV[SWAGGER_TEST]\"}")
+      expect(result).to eq("{\"foo\":\"bar\"}")
     end
   end
 end

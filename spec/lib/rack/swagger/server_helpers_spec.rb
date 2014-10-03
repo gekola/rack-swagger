@@ -2,6 +2,10 @@ require "spec_helper"
 
 describe Rack::Swagger::ServerHelpers do
   include Rack::Swagger::ServerHelpers
+  
+  before do
+    @opts = {}
+  end
 
   describe "display_file_or_404" do
     it "404 if file does not exist" do
@@ -26,11 +30,11 @@ describe Rack::Swagger::ServerHelpers do
     end
   end
 
-  describe "interpolate_env_vars" do
+  describe "overwrite_base_path" do
     it "escapes relevant ENV vars" do
-      ENV["SWAGGER_TEST"] = "bar"
-      result = interpolate_env_vars("{\"foo\":\"ENV[SWAGGER_TEST]\"}")
-      expect(result).to eq("{\"foo\":\"bar\"}")
+      @opts = {overwrite_base_path: "baz"}
+      result = overwrite_base_path("{\"foo\":\"bar\"}")
+      expect(result).to eq("{\"foo\":\"bar\",\"basePath\":\"baz\"}")
     end
   end
 end

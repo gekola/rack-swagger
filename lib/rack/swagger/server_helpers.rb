@@ -28,14 +28,19 @@ module Rack
         @files ||= {}
         @files[file] ||= begin
                            contents = ::File.read(file)
-                           contents = interpolate_env_vars(contents) if type == :json
+                           contents = overwrite_base_path(contents) if type == :json
                            contents
                          end
       end
 
-      def interpolate_env_vars(str)
-        str.gsub!(/ENV\[([A-Z0-9_]+)\]/) { |match| ENV["#{$1}"] }
-
+      def overwrite_base_path(contents)
+        if @opts[:overwrite_base_path]
+          contents = JSON.parse(contents)
+          contents["basePath"] = @opts[:overwrite_base_path]
+          contents.to_json
+        else
+          contents
+        end
       end
     end
   end

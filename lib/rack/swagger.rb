@@ -30,9 +30,9 @@ module Rack
     #
     #   run Rack::Swagger.app(File.expand_path("../docs/", __FILE__))
     #
-    def self.app(docs_dir)
+    def self.app(docs_dir, opts={})
       Rack::Cascade.new([
-        JsonServer.new(docs_dir),
+        JsonServer.new(docs_dir, opts),
         IndexPageServer.new,
         AssetServer.new
       ])

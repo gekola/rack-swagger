@@ -56,6 +56,10 @@ task :update_swagger_ui do
     puts `cat lib/rack/swagger/rentpath/rentpath.diff | patch -p1`
     cp "lib/rack/swagger/rentpath/logo_small.png", "swagger-ui/dist/images/logo_small.png"
 
+    # replace petstore with real docs
+    index_page = File.read("swagger-ui/dist/index.html")
+    File.open("swagger-ui/dist/index.html", "w+") { |f| f << index_page.gsub("http://petstore.swagger.wordnik.com/api/api-docs", "api-docs") }
+
     yml[:versions][:ours] = yml[:versions][:theirs]
     save_swagger_ui_version_yml(yml)
   else

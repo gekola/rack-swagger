@@ -31,10 +31,15 @@ describe Rack::Swagger::ServerHelpers do
   end
 
   describe "overwrite_base_path" do
-    it "escapes relevant ENV vars" do
+    it "adds basePath" do
       @opts = {overwrite_base_path: "baz"}
       result = overwrite_base_path("{\"foo\":\"bar\"}")
       expect(result).to eq("{\"foo\":\"bar\",\"basePath\":\"baz\"}")
+    end
+    it "overwrites basePath" do
+      @opts = {overwrite_base_path: "baz"}
+      result = overwrite_base_path("{\"basePath\":\"bar\"}")
+      expect(result).to eq("{\"basePath\":\"baz\"}")
     end
   end
 end

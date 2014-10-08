@@ -2,6 +2,10 @@ require "spec_helper"
 
 describe Rack::Swagger::ServerHelpers do
   include Rack::Swagger::ServerHelpers
+  
+  before do
+    @opts = {}
+  end
 
   describe "display_file_or_404" do
     it "404 if file does not exist" do
@@ -23,6 +27,19 @@ describe Rack::Swagger::ServerHelpers do
     it "serves proper json content type for :json" do
       result = display_file_or_404(:json, __FILE__)
       expect(result[1]["Content-Type"]).to eq("application/json")
+    end
+  end
+
+  describe "overwrite_base_path" do
+    it "adds basePath" do
+      @opts = {overwrite_base_path: "baz"}
+      result = overwrite_base_path("{\"foo\":\"bar\"}")
+      expect(result).to eq("{\"foo\":\"bar\",\"basePath\":\"baz\"}")
+    end
+    it "overwrites basePath" do
+      @opts = {overwrite_base_path: "baz"}
+      result = overwrite_base_path("{\"basePath\":\"bar\"}")
+      expect(result).to eq("{\"basePath\":\"baz\"}")
     end
   end
 end

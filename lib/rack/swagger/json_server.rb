@@ -6,8 +6,9 @@ module Rack
       RESOURCE_DOC_JSON_MATCHER = /^\/docs\/api-docs\/(.+)\/?/
       ROOT_DOC_JSON_MATCHER     = /^\/docs\/api-docs\/?/
 
-      def initialize(docs_dir)
+      def initialize(docs_dir, opts)
         @docs_dir = docs_dir
+        @opts = opts
       end
 
       def call(env)

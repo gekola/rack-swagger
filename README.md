@@ -37,12 +37,11 @@ run Rack::Swagger.app(File.expand_path("../docs/", __FILE__))
 This will serve the swagger-ui front-end at **/docs/**, and your
 doc files at **/docs/api-docs/**. 
 
-Note that you will have to prefix the path
-value with "/api-docs" in your root API doc for each resource. Like this:
+Your resource definitions should look ike this:
 
 ```json
   {
-    "path": "/api-docs/pet",
+    "path": "/pet",
     "description": "Operations about pets"
   },
 ```

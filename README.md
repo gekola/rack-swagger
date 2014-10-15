@@ -46,6 +46,34 @@ Your resource definitions should look ike this:
   },
 ```
 
+## Getting basePath right
+
+If you are seeing a lot of 404s or CORS-related errors in your docs, you may
+need to tweak the basePath.
+
+You always need to have the basePath point to the same hostname as your API. If
+you have multiple deploys of your application under different hostnames, and
+they share the same set of JSON files, you can use the overwrite_base_path
+option in Rack::Swagger.app() to vary this dynamically.
+
+For example, say you have an environment variable called MY_API_HOST, which
+contains the hostname of your app for a given deployment:
+
+```ruby
+  Rack::Swagger.app(
+    File.expand_path("../docs/", __FILE__),
+    overwrite_base_path: ENV["MY_API_HOST"]
+  )
+```
+
+If you're not using overwrite_base_path, rack-swagger will just use your
+basePath value from your JSON files.
+
+**Important note**: This basePath value will vary for each JSON file:
+
+* For the resource files, it should point to the API root path.
+* For the root file, it should point to the API root path, plus "/docs/api-docs".
+
 ## Upgrading swagger-ui
 
 A distribution of swagger-ui is included with rack-swagger. For developers who

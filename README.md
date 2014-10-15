@@ -48,6 +48,8 @@ Your resource definitions should look ike this:
 
 ## Getting basePath right
 
+##### Using overwrite_base_path
+
 If you are seeing a lot of 404s or CORS-related errors in your docs, you may
 need to tweak the basePath.
 
@@ -66,10 +68,11 @@ contains the hostname of your app for a given deployment:
   )
 ```
 
-If you're not using overwrite_base_path, rack-swagger will just use your
-basePath value from your JSON files.
+##### Setting basePath manually
 
-**Important note**: This basePath value will vary for each JSON file:
+If you're not using overwrite_base_path, rack-swagger will just use your
+basePath value from your JSON files. But just know that basePath will have
+different values depending on the file:
 
 * For the resource files, it should point to the API root path.
 * For the root file, it should point to the API root path, plus "/docs/api-docs".

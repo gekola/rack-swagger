@@ -15,10 +15,10 @@ module Rack
         case env['PATH_INFO']
         when RESOURCE_DOC_JSON_MATCHER
           resource_doc = $1
-          display_file_or_404(:json, "#{@docs_dir}/#{resource_doc}.json")
+          display_file_or_404(:json, "#{@docs_dir}/#{resource_doc}.json", :resource)
 
         when ROOT_DOC_JSON_MATCHER
-          display_file_or_404(:json, "#{@docs_dir}/swagger.json")
+          display_file_or_404(:json, "#{@docs_dir}/swagger.json", :root)
 
         else
           [404, {}, ["Not found"]]

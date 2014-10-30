@@ -6,11 +6,20 @@ module Rack
       def call(env)
         case env['PATH_INFO']
         when "/docs/"
-          display_file_or_404(:html, swagger_index_html_path)
+          query = Rack::Utils.parse_nested_query(env["QUERY_STRING"])
+
+          if query["url"] == "api-docs"
+            display_file_or_404(:html, swagger_index_html_path)
+
+          else
+            res = Rack::Response.new
+            res.redirect("?url=" + "api-docs")
+            res.finish
+          end
 
         when "/docs"
           res = Rack::Response.new
-          res.redirect("docs/")
+          res.redirect("docs/?url=" + "api-docs")
           res.finish
 
         else

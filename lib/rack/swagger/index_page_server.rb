@@ -3,23 +3,33 @@ module Rack
     class IndexPageServer
       include ServerHelpers
 
+      attr_reader :doc_url
+
+      def initialize(doc_url)
+        @doc_url = doc_url
+      end
+
       def call(env)
-        case env['PATH_INFO']
+        path = env['PATH_INFO']
+        if path && !path.end_with?('/') && env['REQUEST_PATH']
+          path += '/' if env['REQUEST_PATH'].end_with?('/')
+        end
+
+        case path
         when "/docs/"
           query = Rack::Utils.parse_nested_query(env["QUERY_STRING"])
 
-          if query["url"] == "api-docs"
+          if query["url"] == doc_url
             display_file_or_404(:html, swagger_index_html_path)
-
           else
             res = Rack::Response.new
-            res.redirect("?url=" + "api-docs")
+            res.redirect("?url=#{doc_url}")
             res.finish
           end
 
         when "/docs"
           res = Rack::Response.new
-          res.redirect("docs/?url=" + "api-docs")
+          res.redirect("docs/?url=#{doc_url}")
           res.finish
 
         else

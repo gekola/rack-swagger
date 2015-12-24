@@ -5,7 +5,7 @@ describe Rack::Swagger::IndexPageServer do
   include Rack::Swagger::ServerHelpers
 
   def app
-    Rack::Swagger::IndexPageServer.new
+    Rack::Swagger::IndexPageServer.new('api-docs')
   end
 
   it "serves index.html at docs/" do

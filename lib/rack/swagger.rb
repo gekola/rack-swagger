@@ -31,11 +31,17 @@ module Rack
     #   run Rack::Swagger.app(File.expand_path("../docs/", __FILE__))
     #
     def self.app(docs_dir, opts={})
+      if docs_dir.is_a? Hash
+        opts = docs_dir
+      end
+
+      doc_url = opts[:url] || 'api-docs'
+
       Rack::Cascade.new([
-        JsonServer.new(docs_dir, opts),
-        IndexPageServer.new,
+        (JsonServer.new(docs_dir, opts) if docs_dir),
+        IndexPageServer.new(doc_url),
         AssetServer.new
-      ])
+      ].compact)
     end
   end
 end

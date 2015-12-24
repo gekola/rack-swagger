@@ -19,12 +19,8 @@ task :update_swagger_ui do
   cd "swagger-ui"
   tar = res.content
   File.open("master.tar.gz", "w+") { |f| f << tar }
-  sh("tar xvf master.tar.gz --include '*swagger-ui*/dist*' --strip-components 1")
+  sh("tar xvf master.tar.gz --wildcards '*swagger-ui*/dist*' --strip-components 1")
   cd ".."
-
-  # apply branding
-  puts `cat lib/rack/swagger/rentpath/rentpath.diff | patch -p1`
-  cp "lib/rack/swagger/rentpath/logo_small.png", "swagger-ui/dist/images/logo_small.png"
 
   # replace petstore with real docs
   index_page = File.read("swagger-ui/dist/index.html")

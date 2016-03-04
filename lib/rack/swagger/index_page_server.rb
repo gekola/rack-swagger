@@ -22,21 +22,23 @@ module Rack
           if query["url"] == doc_url
             display_file_or_404(:html, swagger_index_html_path)
           else
-            res = Rack::Response.new
-            res.redirect("?url=#{doc_url}")
-            res.finish
+            redirect(env)
           end
 
         when "/docs"
-          res = Rack::Response.new
-          res.redirect("docs/?url=#{doc_url}")
-          res.finish
-
+          redirect(env)
         else
           [404, {}, ["Not found"]]
         end
       end
+
+      private
+
+      def redirect(env)
+        res = Rack::Response.new
+        res.redirect("#{env['SCRIPT_NAME']}/docs/?url=#{doc_url}")
+        res.finish
+      end
     end
   end
 end
-

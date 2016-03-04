@@ -16,6 +16,6 @@ describe Rack::Swagger::IndexPageServer do
   it "redirects docs => docs/?url=api-docs" do
     get "/docs"
     expect(last_response.status).to eq(302)
-    expect(last_response.location).to eq("docs/?url=api-docs")
+    expect(last_response.location).to eq("/docs/?url=api-docs")
   end
 end
